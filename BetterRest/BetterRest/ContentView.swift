@@ -11,7 +11,10 @@ import CoreML
 struct ContentView: View {
     @State private var wakeUpTime = defaultWakeUpTime
     @State private var sleepHours = 8.0
-    @State private var coffeeCups = 1
+    @State private var coffeeCupsSelection = 0
+    private var coffeeCups: Int {
+        coffeeCupsSelection + 1
+    }
 
     static var defaultWakeUpTime: Date {
         var components = DateComponents()
@@ -24,9 +27,9 @@ struct ContentView: View {
         coffeeCups == 1 ? "1 cup" : "\(coffeeCups) cups"
     }
 
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
-    @State private var isAlertPresented = false
+    private var bedtime: String {
+        calculateSleep()
+    }
 
     var body: some View {
         NavigationView {
@@ -42,24 +45,26 @@ struct ContentView: View {
                 }
 
                 Section {
-                    Stepper(amountCoffee, value: $coffeeCups, in: 1...12)
+                    Picker(amountCoffee, selection: $coffeeCupsSelection) {
+                        ForEach(1..<13) { cups in
+                            Text("\(cups)")
+                        }
+                    }
                 } header: {
                     Text("Daily coffee intake")
                 }
+
+                Section {
+                    Text(bedtime)
+                } header: {
+                    Text("Bedtime")
+                }
             }
             .navigationTitle("BetterRest")
-            .toolbar {
-                Button("Calculate", action: calculateSleep)
-            }
-            .alert(alertTitle, isPresented: $isAlertPresented) {
-                Button("Ok") { }
-            } message: {
-                Text(alertMessage)
-            }
         }
     }
 
-    private func calculateSleep() {
+    private func calculateSleep() -> String {
         do {
             let config = MLModelConfiguration()
             let model = try SleepCalculator(configuration: config)
@@ -68,14 +73,11 @@ struct ContentView: View {
             let minutes = (components.minute ?? 0) * 60
             let prediction = try model.prediction(wake: Double(hours + minutes), estimatedSleep: sleepHours, coffee: Double(coffeeCups))
             let bedtime = wakeUpTime - prediction.actualSleep
-            alertTitle = "Your bedtime"
-            alertMessage = bedtime.formatted(date: .omitted, time: .shortened)
+            return bedtime.formatted(date: .omitted, time: .shortened)
         } catch {
-            alertTitle = "Error"
-            alertMessage = "Something went wrong!"
             debugPrint(error.localizedDescription)
+            return "Something went wrong!"
         }
-        isAlertPresented.toggle()
     }
 }
 
