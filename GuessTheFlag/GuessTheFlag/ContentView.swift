@@ -52,10 +52,7 @@ struct ContentView: View {
                         Button {
                             flagTapped(number)
                         } label: {
-                            Image(countries[number])
-                                .renderingMode(.original)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                                .shadow(radius: 20)
+                            FlagImage(countryName: countries[number])
                         }
                     }
                 }
@@ -118,5 +115,23 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct FlagImage: View {
+    let countryName: String
+    var body: some View {
+        Image(countryName)
+            .renderingMode(.original)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .shadow(radius: 20)
+    }
+}
+
+struct FlagImage_Previews: PreviewProvider {
+    static var previews: some View {
+        FlagImage(countryName: "US")
+            .padding()
+            .previewLayout(.sizeThatFits)
     }
 }

@@ -7,6 +7,48 @@
 
 import SwiftUI
 
+struct FancyTitle: ViewModifier {
+    var colors: [Color]
+    var startPoint: UnitPoint
+    var endPoint: UnitPoint
+
+    func body(content: Content) -> some View {
+        LinearGradient(
+            colors: colors,
+            startPoint: startPoint,
+            endPoint: endPoint
+        ).mask(
+            content.font(.largeTitle.bold())
+        )
+    }
+}
+
+extension View {
+    func fancyTitle(colors: [Color], startPoint: UnitPoint, endPoint: UnitPoint) -> some View {
+        modifier(
+            FancyTitle(
+                colors: colors,
+                startPoint: startPoint,
+                endPoint: endPoint
+            )
+        )
+    }
+}
+
+struct LargeBlueTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(.blue)
+            .font(.largeTitle)
+    }
+}
+
+extension View {
+    func largeBlueTitle() -> some View {
+        modifier(LargeBlueTitle())
+    }
+}
+
 struct CapsuleText: View {
     var text: String
 
@@ -67,6 +109,7 @@ struct ContentView: View {
             Text("Hufflepuff")
             Text("Ravenclaw")
             Text("Slytherin")
+                .largeBlueTitle()
         }
         .font(.title)
     }
@@ -98,7 +141,20 @@ struct ContentView: View {
                 .background(.green)
                 .padding()
                 .background(.yellow)
-            houses
+            HStack {
+                Image(systemName: "arrow.left")
+                VStack(alignment: .leading) {
+                    Text("FancyTitle")
+                    Text("ViewModifier")
+                }
+                Image(systemName: "arrow.right")
+            }
+            .fancyTitle(
+                colors: [.red, .blue, .black],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+            .padding()
             CapsuleText(text: "Capsule")
                 .foregroundColor(.white)
         }
