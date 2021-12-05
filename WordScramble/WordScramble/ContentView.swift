@@ -17,6 +17,14 @@ struct ContentView: View {
     @State private var alertMessage = ""
     @State private var isAlertShown = false
 
+    private var score: Int {
+        var currentScore = 0
+        for word in words {
+            currentScore += word.count
+        }
+        return currentScore * words.count
+    }
+
     private enum FocusedTextField: Hashable {
         case newWord
     }
@@ -29,6 +37,9 @@ struct ContentView: View {
                         .textInputAutocapitalization(.none)
                         .focused($isTextFieldFocused, equals: .newWord)
                 }
+                Section("Score") {
+                    Text("\(score)")
+                }
                 Section {
                     ForEach(words, id: \.self) { word in
                         HStack{
@@ -39,6 +50,9 @@ struct ContentView: View {
                 }
             }
             .navigationTitle(rootWord)
+            .toolbar {
+                Button("Restart", action: startGame)
+            }
             .onSubmit(addWord)
         }
         .onAppear(perform: startGame)
@@ -51,19 +65,23 @@ struct ContentView: View {
 
     private func addWord() {
         let trimmedWord = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard trimmedWord.count > .zero else { return }
-        if !words.contains(trimmedWord) {
-            if isPossible(trimmedWord) {
-                if isRealWord(trimmedWord) {
-                    words.insert(trimmedWord, at: .zero)
+        guard trimmedWord.count > 3 else { return }
+        if trimmedWord == rootWord {
+            showAlert(title: "Nice one", message: "You can not use the same word tho")
+        } else {
+            if !words.contains(trimmedWord) {
+                if isPossible(trimmedWord) {
+                    if isRealWord(trimmedWord) {
+                        words.insert(trimmedWord, at: .zero)
+                    } else {
+                        showAlert(title: "Word is not valid", message: "That's not a valid word in English")
+                    }
                 } else {
-                    showAlert(title: "Word is not valid", message: "That's not a valid word in English")
+                    showAlert(title: "Word is not possible", message: "You can not spell '\(trimmedWord)' from '\(rootWord)'")
                 }
             } else {
-                showAlert(title: "Word is not possible", message: "You can not spell '\(trimmedWord)' from '\(rootWord)'")
+                showAlert(title: "Word already used", message: "Try with another one")
             }
-        } else {
-            showAlert(title: "Word already used", message: "Try with another one")
         }
         newWord = ""
         isTextFieldFocused = .newWord
@@ -97,6 +115,7 @@ struct ContentView: View {
     }
 
     private func startGame() {
+        words = []
         guard let fileUrl = Bundle.main.url(forResource: "start", withExtension: "txt") else {
             fatalError("Could not load the file")
         }
