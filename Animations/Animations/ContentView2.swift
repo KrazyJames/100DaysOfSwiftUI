@@ -27,7 +27,7 @@ struct ContentView2: View {
     }
 }
 
-struct ContentView3: View {
+struct ContentView2_5: View {
     let letters = Array("Hello SwiftUI")
     @State private var enabled = false
     @State private var dragAmount = CGSize.zero
@@ -59,6 +59,6 @@ struct ContentView3: View {
 
 struct ContentView2_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView3()
+        ContentView2_5()
     }
 }
