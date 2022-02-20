@@ -33,30 +33,39 @@ struct ContentView: View {
         NavigationView {
             List {
                 Section {
-                    TextField("Enter your word", text: $newWord)
+                    TextField("Enter your word",
+                              text: $newWord)
                         .textInputAutocapitalization(.none)
-                        .focused($isTextFieldFocused, equals: .newWord)
+                        .focused($isTextFieldFocused,
+                                 equals: .newWord)
                 }
                 Section("Score") {
                     Text("\(score)")
                 }
+                .accessibilityElement()
+                .accessibilityLabel("Score: \(score)")
                 Section {
                     ForEach(words, id: \.self) { word in
-                        HStack{
+                        HStack {
                             Image(systemName: "\(word.count).circle")
                             Text(word)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel("\(word)")
+                        .accessibilityHint("\(word.count) letters")
                     }
                 }
             }
             .navigationTitle(rootWord)
             .toolbar {
-                Button("Restart", action: startGame)
+                Button("Restart",
+                       action: startGame)
             }
             .onSubmit(addWord)
         }
         .onAppear(perform: startGame)
-        .alert(alertTitle, isPresented: $isAlertShown) {
+        .alert(alertTitle,
+               isPresented: $isAlertShown) {
             Button("Ok", role: .cancel) { }
         } message: {
             Text(alertMessage)
@@ -67,20 +76,32 @@ struct ContentView: View {
         let trimmedWord = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmedWord.count > 3 else { return }
         if trimmedWord == rootWord {
-            showAlert(title: "Nice one", message: "You can not use the same word tho")
+            showAlert(
+                title: "Nice one",
+                message: "You can not use the same word tho"
+            )
         } else {
             if !words.contains(trimmedWord) {
                 if isPossible(trimmedWord) {
                     if isRealWord(trimmedWord) {
                         words.insert(trimmedWord, at: .zero)
                     } else {
-                        showAlert(title: "Word is not valid", message: "That's not a valid word in English")
+                        showAlert(
+                            title: "Word is not valid",
+                            message: "That's not a valid word in English"
+                        )
                     }
                 } else {
-                    showAlert(title: "Word is not possible", message: "You can not spell '\(trimmedWord)' from '\(rootWord)'")
+                    showAlert(
+                        title: "Word is not possible",
+                        message: "You can not spell '\(trimmedWord)' from '\(rootWord)'"
+                    )
                 }
             } else {
-                showAlert(title: "Word already used", message: "Try with another one")
+                showAlert(
+                    title: "Word already used",
+                    message: "Try with another one"
+                )
             }
         }
         newWord = ""
@@ -103,8 +124,17 @@ struct ContentView: View {
 
     private func isRealWord(_ word: String) -> Bool {
         let checker = UITextChecker()
-        let range = NSRange(location: .zero, length: word.utf16.count)
-        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: .zero, wrap: false, language: "en")
+        let range = NSRange(
+            location: .zero,
+            length: word.utf16.count
+        )
+        let misspelledRange = checker.rangeOfMisspelledWord(
+            in: word,
+            range: range,
+            startingAt: .zero,
+            wrap: false,
+            language: "en"
+        )
         return misspelledRange.location == NSNotFound
     }
 
@@ -116,7 +146,10 @@ struct ContentView: View {
 
     private func startGame() {
         words = []
-        guard let fileUrl = Bundle.main.url(forResource: "start", withExtension: "txt") else {
+        guard let fileUrl = Bundle.main.url(
+            forResource: "start",
+            withExtension: "txt"
+        ) else {
             fatalError("Could not load the file")
         }
         guard let content = try? String(contentsOf: fileUrl) else {
