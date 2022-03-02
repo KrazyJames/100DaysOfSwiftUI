@@ -23,7 +23,7 @@ struct ContentView: View {
                     Button {
                         isGrid.toggle()
                     } label: {
-                        Image(systemName: isGrid ? "list.bullet" : "square.grid.2x2")
+                        Label.init("Change to \(isGrid ? "list" : "grid")", systemImage: isGrid ? "list.bullet" : "square.grid.2x2")
                     }
                     .tint(.primary)
                 }
@@ -58,6 +58,8 @@ struct ContentView: View {
                 MissionView(mission: mission)
             } label: {
                 itemView(isGrid, mission: mission)
+                    .accessibilityElement()
+                    .accessibilityLabel("Mission \(mission.displayName), date: \(mission.date)")
             }
         }
     }

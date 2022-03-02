@@ -20,8 +20,8 @@ struct AddressView: View {
                           text: $viewModel.city)
                 TextField("Zip",
                           text: $viewModel.zip)
+                    .keyboardType(.numberPad)
             }
-
             Section {
                 NavigationLink("Check out") {
                     CheckOutView(viewModel: viewModel)

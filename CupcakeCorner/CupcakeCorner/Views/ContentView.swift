@@ -22,6 +22,19 @@ struct ContentView: View {
                     }
                     Stepper("Number of cakes: \(viewModel.quantity)",
                             value: $viewModel.quantity, in: 3...20)
+                        .accessibilityElement()
+                        .accessibilityLabel("Number of cakes")
+                        .accessibilityValue("\(viewModel.quantity)")
+                        .accessibilityAdjustableAction { direction in
+                            switch direction {
+                            case .increment:
+                                if viewModel.quantity < 20 { viewModel.quantity += 1 }
+                            case .decrement:
+                                if viewModel.quantity > 3 { viewModel.quantity -= 1 }
+                            @unknown default:
+                                break
+                            }
+                        }
                 }
                 Section {
                     Toggle("Any special requests?",

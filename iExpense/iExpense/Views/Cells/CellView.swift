@@ -27,6 +27,9 @@ struct CellView: View {
                 .foregroundColor(item.color)
                 .bold()
         }
+        .accessibilityElement()
+        .accessibilityLabel(Text("\(item.name), ammount: ") + Text(item.amount, format: .localCurrency()))
+        .accessibilityHint("Expense type: \(item.type)")
     }
 }
 

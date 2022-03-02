@@ -11,7 +11,7 @@ struct RowView: View {
     let mission: MissionViewModel
     var body: some View {
         HStack {
-            Image(mission.image)
+            Image(decorative: mission.image)
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 75)

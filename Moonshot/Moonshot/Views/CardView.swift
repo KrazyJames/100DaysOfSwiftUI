@@ -9,14 +9,17 @@ import SwiftUI
 
 struct CardView: View {
     let mission: MissionViewModel
+
     var body: some View {
         VStack {
-            Image(mission.image)
+            Image(decorative: mission.image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 100, height: 100)
+                .frame(
+                    width: 100,
+                    height: 100
+                )
                 .padding()
-
             VStack {
                 Text(mission.displayName)
                     .font(.headline)
@@ -29,17 +32,34 @@ struct CardView: View {
             .frame(maxWidth: .infinity)
             .background(.lightBackground)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .overlay(RoundedRectangle(cornerRadius: 10).stroke(.lightBackground))
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: 10
+            )
+        )
+        .overlay(
+            RoundedRectangle(
+                cornerRadius: 10
+            ).stroke(.lightBackground)
+        )
     }
 }
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView(mission: MissionViewModel(mission: Mission(id: 1, launchDate: nil, crew: [], description: ""), crew: []))
-            .padding()
-            .previewLayout(.sizeThatFits)
-            .background(.darkBackground)
-            .preferredColorScheme(.dark)
+        CardView(
+            mission: MissionViewModel(
+                mission: Mission(
+                    id: 1,
+                    launchDate: nil,
+                    crew: [],
+                    description: ""),
+                crew: []
+            )
+        )
+        .padding()
+        .previewLayout(.sizeThatFits)
+        .background(.darkBackground)
+        .preferredColorScheme(.dark)
     }
 }

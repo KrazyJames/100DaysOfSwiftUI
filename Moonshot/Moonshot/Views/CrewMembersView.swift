@@ -30,7 +30,7 @@ struct CrewMemberTagView: View {
     let member: CrewMemberViewModel
     var body: some View {
         HStack {
-            Image(member.id)
+            Image(decorative: member.id)
                 .resizable()
                 .scaledToFill()
                 .frame(
@@ -51,7 +51,9 @@ struct CrewMemberTagView: View {
                     .foregroundColor(.primary)
                 Text(member.role)
                     .foregroundColor(.secondary)
+                    .accessibilityLabel("Member role: \(member.role)")
             }
+            .accessibilityElement(children: .combine)
         }
     }
 }

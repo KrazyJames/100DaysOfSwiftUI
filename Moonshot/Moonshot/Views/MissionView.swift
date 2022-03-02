@@ -9,21 +9,22 @@ import SwiftUI
 
 struct MissionView: View {
     let mission: MissionViewModel
+
     var body: some View {
         GeometryReader { geo in
             ScrollView {
                 VStack {
                     VStack(spacing: 20) {
-                        Image(mission.image)
+                        Image(decorative: mission.image)
                             .resizable()
                             .scaledToFit()
                             .frame(maxWidth: geo.size.width * 0.6)
-
                         Text(mission.fullDate)
                             .font(.subheadline)
                     }
                     .padding()
-
+                    .accessibilityElement()
+                    .accessibilityLabel("Mission: \(mission.displayName), launch date: \(mission.fullDate)")
                     Divider()
                     VStack(alignment: .leading) {
                         Text("Highlights")
@@ -32,7 +33,6 @@ struct MissionView: View {
                         Text(mission.highlights)
                     }
                     .padding()
-
                     Divider()
                     VStack(alignment: .leading) {
                         Text("Crew")

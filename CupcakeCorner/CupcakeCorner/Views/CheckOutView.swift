@@ -27,10 +27,9 @@ struct CheckOutView: View {
                     ProgressView()
                 }
                 .frame(height: 233)
-
+                .accessibilityElement(children: .ignore)
                 Text("Your cost is \(viewModel.cost, format: .currency(code: "USD"))")
                     .font(.title3)
-
                 Button("Place order") {
                     Task {
                         await placeOrder()
@@ -65,7 +64,7 @@ struct CheckOutView: View {
             let decodedOrder = try JSONDecoder().decode(Order.self,
                                                         from: data)
             alertTitle = "Thank you!"
-            alertMessage = "Your order for \(decodedOrder.quantity) x \(OrderViewModel.types[decodedOrder.type].lowercased()) cupcakes is on its way"
+            alertMessage = "Your order for \(decodedOrder.quantity) \(OrderViewModel.types[decodedOrder.type].lowercased()) cupcakes is on its way"
             showAlert = true
         } catch {
             alertTitle = "We are sorry"
